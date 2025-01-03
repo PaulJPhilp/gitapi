@@ -1,5 +1,7 @@
 import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
 import type { Metadata } from "next"
+import { Header } from "./components/Header"
 import "./globals.css"
 
 export const metadata: Metadata = {
@@ -16,7 +18,11 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <body className="min-h-screen bg-background font-sans antialiased">
                 <ThemeProvider defaultTheme="system">
-                    {children}
+                    <Header />
+                    <main className="container py-6 px-4">
+                        {children}
+                    </main>
+                    <Toaster />
                 </ThemeProvider>
             </body>
         </html>

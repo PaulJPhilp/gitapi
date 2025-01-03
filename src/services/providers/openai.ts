@@ -23,6 +23,9 @@ export async function completeWithOpenAI(
     maxTokens?: number
 ): Promise<CompletionsResponse> {
     try {
+        console.log("[OpenAI Provider] Making request with model:", model.id)
+        console.log("[OpenAI Provider] API Key length:", apiKey?.length ?? 0)
+
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -43,6 +46,12 @@ export async function completeWithOpenAI(
         })
 
         if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}))
+            console.error("[OpenAI Provider] Error response:", {
+                status: response.status,
+                statusText: response.statusText,
+                error: errorData
+            })
             throw new NetworkError(`OpenAI API error: ${response.statusText}`, response.status)
         }
 
@@ -57,6 +66,7 @@ export async function completeWithOpenAI(
             }
         }
     } catch (error) {
+        console.error("[OpenAI Provider] Error:", error)
         throw new NetworkError(`Failed to complete with OpenAI: ${error}`, undefined, error)
     }
 } 

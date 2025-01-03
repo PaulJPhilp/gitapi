@@ -31,6 +31,12 @@ export default function Home() {
                             Create and manage your AI prompts for consistent interactions
                         </p>
                     </div>
+                    <div className="p-6 border rounded-lg shadow-sm">
+                        <h2 className="text-xl font-semibold mb-4">Prompt Runs</h2>
+                        <p className="text-gray-600 mb-4">
+                            View and analyze the history of your prompt executions
+                        </p>
+                    </div>
                 </div>
             </main>
         </div>

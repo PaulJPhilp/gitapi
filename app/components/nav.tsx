@@ -7,12 +7,15 @@ export function MainNav() {
         <div className="border-b border-tfl-grey">
             <div className="flex h-16 items-center px-4 bg-white dark:bg-tfl-dark-grey">
                 <div className="flex items-center space-x-4 flex-1">
-                    <Link
-                        href="/"
-                        className="font-bold text-tfl-blue hover:text-tfl-red transition-colors"
-                    >
-                        Git API Explorer
-                    </Link>
+                    <div className="flex items-center space-x-2">
+                        <Link
+                            href="/"
+                            className="font-bold text-tfl-blue hover:text-tfl-red transition-colors"
+                        >
+                            Git API Explorer
+                        </Link>
+                        <ThemeToggle />
+                    </div>
                     <nav className="flex items-center space-x-6">
                         <Link href="/releases">
                             <Button variant="nav">Releases</Button>
@@ -26,9 +29,11 @@ export function MainNav() {
                         <Link href="/prompts">
                             <Button variant="nav">Prompts</Button>
                         </Link>
+                        <Link href="/prompt-runs">
+                            <Button variant="nav">Prompt Runs</Button>
+                        </Link>
                     </nav>
                 </div>
-                <ThemeToggle />
             </div>
         </div>
     )

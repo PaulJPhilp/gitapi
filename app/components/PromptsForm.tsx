@@ -10,7 +10,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { LexicalEditor } from "@/components/ui/lexical-editor"
 import type { Prompt } from "@/src/schemas/prompts"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useState } from "react"
@@ -96,10 +96,14 @@ export default function PromptsForm({ onSuccess }: PromptsFormProps) {
                             <FormItem>
                                 <FormLabel>Content</FormLabel>
                                 <FormControl>
-                                    <Textarea
+                                    <LexicalEditor
                                         placeholder="Enter prompt content..."
-                                        className="min-h-[100px]"
-                                        {...field}
+                                        className="min-h-[200px]"
+                                        defaultValue={field.value}
+                                        onChange={(editorState) => {
+                                            const json = editorState.toJSON()
+                                            field.onChange(JSON.stringify(json))
+                                        }}
                                     />
                                 </FormControl>
                                 <FormMessage />

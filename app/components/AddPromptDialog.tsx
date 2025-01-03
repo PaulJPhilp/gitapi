@@ -20,6 +20,7 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { LexicalEditor } from "@/components/ui/lexical-editor"
 import {
     Select,
     SelectContent,
@@ -27,10 +28,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
 import { API_BASE_URL } from "@/src/config/api"
 import type { Model } from "@/src/schemas/models"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { $getRoot } from "lexical"
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
@@ -138,7 +139,7 @@ export function AddPromptDialog({ onPromptAdded }: AddPromptDialogProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>Add Prompt</Button>
+                <Button className="m-[50px]">Add Prompt</Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -205,10 +206,15 @@ export function AddPromptDialog({ onPromptAdded }: AddPromptDialogProps) {
                                 <FormItem>
                                     <FormLabel>Content</FormLabel>
                                     <FormControl>
-                                        <Textarea
+                                        <LexicalEditor
                                             placeholder="Enter prompt content"
-                                            className="min-h-[100px]"
-                                            {...field}
+                                            className="min-h-[200px]"
+                                            defaultValue={field.value}
+                                            onChange={(editorState) => {
+                                                const text = editorState.read(() => $getRoot().getTextContent())
+                                                console.log("[AddPromptDialog] Editor content:", text)
+                                                field.onChange(text)
+                                            }}
                                         />
                                     </FormControl>
                                     <FormDescription>

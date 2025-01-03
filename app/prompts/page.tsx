@@ -5,6 +5,13 @@ import { ErrorBoundary } from "@/app/components/ErrorBoundary"
 import { LoadingSpinner } from "@/app/components/LoadingSpinner"
 import { Button } from "@/components/ui/button"
 import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+import {
     Table,
     TableBody,
     TableCell,
@@ -12,8 +19,10 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import { useToast } from "@/components/ui/use-toast"
 import { API_BASE_URL } from "@/src/config/api"
 import type { Prompt } from "@/src/schemas/prompts"
+import { Copy } from "lucide-react"
 import { Suspense, useCallback, useEffect, useState } from "react"
 
 function PromptsList() {
@@ -21,6 +30,13 @@ function PromptsList() {
     const [error, setError] = useState<string | null>(null)
     const [isLoading, setIsLoading] = useState(true)
     const [isDeleting, setIsDeleting] = useState<string | null>(null)
+    const [isRunning, setIsRunning] = useState<string | null>(null)
+    const [completionDialog, setCompletionDialog] = useState<{
+        isOpen: boolean
+        prompt?: Prompt
+        completion?: string
+    }>({ isOpen: false })
+    const { toast } = useToast()
 
     const fetchPrompts = useCallback(async () => {
         try {
@@ -39,7 +55,7 @@ function PromptsList() {
 
             const data = await response.json()
             console.log("[Prompts Page] Successfully fetched prompts:", data)
-            setPrompts(data.prompts)
+            setPrompts(Array.isArray(data) ? data : data.prompts || [])
         } catch (err) {
             console.error("[Prompts Page] Error fetching prompts:", {
                 error: err,
@@ -95,6 +111,71 @@ function PromptsList() {
         fetchPrompts()
     }
 
+    const handleRun = async (prompt: Prompt) => {
+        try {
+            setIsRunning(prompt.id)
+            console.log(`[Prompts Page] Running prompt ${prompt.id}...`)
+
+            // First, get the completion from the completions API
+            const completionResponse = await fetch(`${API_BASE_URL}/completions`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    modelId: prompt.modelId,
+                    promptId: prompt.id,
+                    prompt: prompt.content,
+                    temperature: 0.7,
+                    maxTokens: 1000
+                }),
+            })
+
+            if (!completionResponse.ok) {
+                const errorData = await completionResponse.json().catch(() => ({}))
+                throw new Error(
+                    errorData.message ||
+                    `Failed to get completion: ${completionResponse.status} ${completionResponse.statusText}`
+                )
+            }
+
+            const completionData = await completionResponse.json()
+
+            // The prompt run is now created by the completions API
+            // so we don't need to create it separately
+
+            console.log(`[Prompts Page] Successfully ran prompt ${prompt.id}:`, completionData)
+            setCompletionDialog({
+                isOpen: true,
+                prompt,
+                completion: completionData.text
+            })
+        } catch (err) {
+            console.error("[Prompts Page] Error running prompt:", {
+                error: err,
+                name: err instanceof Error ? err.name : "Unknown",
+                message: err instanceof Error ? err.message : "Unknown error",
+                stack: err instanceof Error ? err.stack : "No stack trace",
+            })
+            setError(err instanceof Error ? err.message : "Failed to run prompt")
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: err instanceof Error ? err.message : "Failed to run prompt"
+            })
+        } finally {
+            setIsRunning(null)
+        }
+    }
+
+    const handleCopy = (text: string) => {
+        navigator.clipboard.writeText(text)
+        toast({
+            description: "Copied to clipboard",
+            duration: 2000
+        })
+    }
+
     if (isLoading) {
         return <LoadingSpinner text="Loading prompts..." />
     }
@@ -123,7 +204,22 @@ function PromptsList() {
                             <TableCell>{prompt.modelId}</TableCell>
                             <TableCell>{prompt.isActive ? "Active" : "Inactive"}</TableCell>
                             <TableCell className="truncate max-w-md">{prompt.content}</TableCell>
-                            <TableCell className="text-right">
+                            <TableCell className="text-right space-x-2">
+                                <Button
+                                    variant="secondary"
+                                    size="sm"
+                                    onClick={() => handleRun(prompt)}
+                                    disabled={isRunning === prompt.id}
+                                >
+                                    {isRunning === prompt.id ? (
+                                        <>
+                                            <LoadingSpinner size="sm" className="mr-2" />
+                                            Running...
+                                        </>
+                                    ) : (
+                                        "Run"
+                                    )}
+                                </Button>
                                 <Button
                                     variant="destructive"
                                     size="sm"
@@ -144,6 +240,56 @@ function PromptsList() {
                     ))}
                 </TableBody>
             </Table>
+
+            <Dialog
+                open={completionDialog.isOpen}
+                onOpenChange={(open) => setCompletionDialog(prev => ({ ...prev, isOpen: open }))}
+            >
+                <DialogContent className="sm:max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle>Completion Result</DialogTitle>
+                        <DialogDescription>
+                            {completionDialog.prompt?.name}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-6">
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-sm font-medium">Prompt</h3>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleCopy(completionDialog.prompt?.content || "")}
+                                >
+                                    <Copy className="h-4 w-4" />
+                                </Button>
+                            </div>
+                            <div className="rounded-md bg-muted p-4">
+                                <p className="text-sm whitespace-pre-wrap">
+                                    {completionDialog.prompt?.content}
+                                </p>
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                                <h3 className="text-sm font-medium">Completion</h3>
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => handleCopy(completionDialog.completion || "")}
+                                >
+                                    <Copy className="h-4 w-4" />
+                                </Button>
+                            </div>
+                            <div className="rounded-md bg-muted p-4">
+                                <p className="text-sm whitespace-pre-wrap">
+                                    {completionDialog.completion}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }

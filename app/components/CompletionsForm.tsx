@@ -14,11 +14,35 @@ interface CompletionResponse {
         completionTokens?: number
         totalTokens?: number
     }
+    promptRun?: {
+        id: string
+        promptId: string
+        modelId: string
+        providerId: string
+        content: string
+        completion: string
+        usage: {
+            promptTokens: number
+            completionTokens: number
+            totalTokens: number
+        }
+        createdAt: string
+    }
 }
 
 interface CompletionsFormProps {
     promptId: string
     content: string
+}
+
+interface RunPromptRequest {
+    promptId: string;
+    modelId: string;
+    content: string;
+    options?: {
+        temperature?: number;
+        maxTokens?: number;
+    };
 }
 
 export function CompletionsForm({ promptId, content }: CompletionsFormProps) {
@@ -76,7 +100,17 @@ export function CompletionsForm({ promptId, content }: CompletionsFormProps) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(values),
+                body: JSON.stringify({
+                    modelId: values.modelId,
+                    messages: [
+                        {
+                            role: "user",
+                            content: values.prompt
+                        }
+                    ],
+                    temperature: values.temperature,
+                    maxTokens: values.maxTokens
+                }),
             })
 
             if (!response.ok) {
@@ -112,7 +146,7 @@ export function CompletionsForm({ promptId, content }: CompletionsFormProps) {
         <div className="space-y-8">
             <PromptRunner
                 models={models}
-                content=""
+                content={content}
                 onSubmit={onSubmit}
                 loading={isSubmitting}
                 error={error}
@@ -121,7 +155,7 @@ export function CompletionsForm({ promptId, content }: CompletionsFormProps) {
                 response={response}
                 loading={isSubmitting}
                 error={error}
-                promptRuns={[]}
+                promptRuns={response?.promptRun ? [response.promptRun] : []}
             />
         </div>
     )

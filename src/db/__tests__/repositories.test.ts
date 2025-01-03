@@ -1,6 +1,5 @@
 import { afterAll, beforeAll, describe, expect, test } from "bun:test"
-import { migrate } from "drizzle-orm/libsql/migrator"
-import { client, db } from "../index"
+import { client } from "../index"
 import { DefaultModelRepository } from "../repositories/model"
 import { DefaultPromptRepository } from "../repositories/prompt"
 import { DefaultPromptRunRepository } from "../repositories/prompt-run"
@@ -81,7 +80,9 @@ describe("Repository Tests", () => {
 
     // Initialize database before tests
     beforeAll(async () => {
-        await migrate(db, { migrationsFolder: "./src/db/migrations" })
+        // TODO: Replace with direct SQLite migration
+        const migrations = await import("../migrations")
+        await migrations.up(client)
     })
 
     // Cleanup after all tests

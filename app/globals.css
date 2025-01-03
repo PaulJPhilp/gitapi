@@ -65,3 +65,31 @@
     --ring: 232 100% 33%;
   }
 }
+
+/* Lexical Editor Styles */
+.lexical-editor {
+    position: relative;
+    border-radius: theme('borderRadius.md');
+    border: 1px solid hsl(var(--input));
+    background: transparent;
+}
+
+.lexical-editor:focus-within {
+    outline: none;
+    @apply ring-1 ring-[hsl(var(--ring))];
+}
+
+.lexical-content-editable {
+    min-height: 80px;
+    padding: theme('spacing.2');
+    outline: none;
+}
+
+.lexical-placeholder {
+    color: theme('colors.muted.foreground');
+    pointer-events: none;
+    position: absolute;
+    top: theme('spacing.2');
+    left: theme('spacing.2');
+    user-select: none;
+}

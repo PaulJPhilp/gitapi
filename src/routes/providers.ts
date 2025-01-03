@@ -1,6 +1,11 @@
+import { createClient } from "@libsql/client"
 import type { RequestHandler } from "express"
 import { Router } from "express"
-import { client } from "../db/client"
+
+export const client = createClient({
+    url: process.env.DATABASE_URL ?? "file:local.db",
+    authToken: process.env.DATABASE_AUTH_TOKEN
+})
 
 export const providersRouter = Router()
 
