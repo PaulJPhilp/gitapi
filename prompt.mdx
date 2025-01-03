@@ -1,0 +1,87 @@
+** Prompt Title:**
+    GitHub Release Visualizer
+
+        ** Application Overview:**
+            Develop a GitHub Release Visualizer application with a backend providing all required endpoints and a React frontend using the TanStack.The app enables users to explore, compare, and gain insights into GitHub releases, providing a robust tool for repository analysis and management.
+
+---
+
+** Tech Stack **
+
+- Typescript@5.7.2
+- Effect@3.12.0
+- Biome@1.8.0
+- Vite@6.0.6
+- Vitest@2.4.0
+
+
+
+### ** Current Key Features **
+
+    1. ** Repo Selector:**
+        - A simple UI to:
+            - Set and edit the GitHub repository owner and name.  
+            - Validate the repository via the backend.  
+            - Persist the selected repository for the session.  
+
+2. ** Error Feedback:**
+        - Display error messages in a simple, attractive, dismissable dialog.  
+   - Handle specific error scenarios such as rate limits or server issues.  
+
+3. ** List All Releases:**
+    - Fetch and display a list of all releases for the selected repository.  
+   - Include options to:
+- Filter releases by Semantic Versioning(SemVer) levels(major, minor, patch).  
+     - Sort releases by SemVer levels or release date.  
+
+4. ** Release Visualization:**
+    - Show detailed information for a selected release:
+        - Commit history.  
+     - Linked pull requests and issues.  
+     - Contributors with activity stats.  
+     - Associated release assets.  
+
+5. ** Release Insights:**
+    - Parse and display changelogs if available.  
+   - Provide release statistics, including:
+- Number of commits.  
+     - Issues closed.  
+     - Lines of code changed.  
+   - Highlight key contributors or modules most affected by a release.  
+
+6. ** Release Comparison:**
+    - Compare two or more releases side by side, highlighting:
+- Added, changed, or removed files.  
+     - Differences in contributors, issues, and pull requests.  
+
+7. ** Customizable Visualizations:**
+    - Use TanStack tools to manage and display interactive data.  
+   - Provide visualizations such as graphs, tables, and timelines.  
+
+---
+
+### ** Backend Integration **
+
+    1. ** Validate Repository:**  
+   - ** Endpoint:** `GET /validate/:owner/:repo`
+    - ** Purpose:** Check if a repository exists.  
+
+   ** Example Implementation:**
+    ```javascript
+   async function validateRepository(owner, repo) {
+       try {
+           const response = await fetch(`/ validate / ${ owner }/${repo}`);
+const data = await response.json();
+if (response.ok) {
+    if (data.exists) {
+        console.log("Repository is valid.");
+    } else {
+        console.error("Repository does not exist.");
+    }
+} else {
+    handleError(response.status, data.error);
+}
+       } catch (error) {
+    console.error("Error validating repository:", error);
+}
+   }

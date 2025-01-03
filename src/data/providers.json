@@ -1,0 +1,118 @@
+{
+	"providers": [
+		{
+			"id": "openai",
+			"name": "OpenAI",
+			"description": "Leading AI research company providing state-of-the-art language models",
+			"website": "https://openai.com",
+			"apiKeyRequired": true,
+			"baseUrl": "https://api.openai.com/v1",
+			"isEnabled": true,
+			"releaseDate": "2015-12-11",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": true,
+				"imageAnalysis": true,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "anthropic",
+			"name": "Anthropic",
+			"description": "AI research company focused on developing safe and ethical AI systems",
+			"website": "https://anthropic.com",
+			"apiKeyRequired": true,
+			"baseUrl": "https://api.anthropic.com/v1",
+			"isEnabled": true,
+			"releaseDate": "2021-05-01",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": false,
+				"imageGeneration": false,
+				"imageAnalysis": false,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "google",
+			"name": "Google AI",
+			"description": "Google's advanced AI platform offering cutting-edge language and multimodal models",
+			"website": "https://ai.google.dev",
+			"apiKeyRequired": true,
+			"baseUrl": "https://generativelanguage.googleapis.com/v1",
+			"isEnabled": true,
+			"releaseDate": "2023-12-06",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": true,
+				"imageAnalysis": true,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "meta",
+			"name": "Meta",
+			"description": "Meta's open-source AI models and research platform, including Llama series",
+			"website": "https://ai.meta.com",
+			"apiKeyRequired": false,
+			"baseUrl": "https://api.meta.ai/v1",
+			"isEnabled": true,
+			"releaseDate": "2023-07-18",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": false,
+				"imageAnalysis": true,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "ibm",
+			"name": "IBM Watson",
+			"description": "Enterprise-grade AI solutions with focus on business applications and natural language processing",
+			"website": "https://www.ibm.com/watson",
+			"apiKeyRequired": true,
+			"baseUrl": "https://api.us-south.watsonx.ai/v1",
+			"isEnabled": true,
+			"releaseDate": "2023-08-23",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": false,
+				"imageAnalysis": true,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "microsoft",
+			"name": "Microsoft Azure AI",
+			"description": "Enterprise AI platform with Azure OpenAI Service and custom model deployment capabilities",
+			"website": "https://azure.microsoft.com/products/ai-services",
+			"apiKeyRequired": true,
+			"baseUrl": "https://YOUR_RESOURCE_NAME.openai.azure.com",
+			"isEnabled": true,
+			"releaseDate": "2023-03-09",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": true,
+				"imageAnalysis": true,
+				"functionCalling": true,
+				"streaming": true
+			}
+		}
+	]
+}
