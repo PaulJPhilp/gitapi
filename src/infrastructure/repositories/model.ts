@@ -133,6 +133,9 @@ export const modelRepository = {
             sql: "SELECT * FROM models WHERE id = ?",
             args: [id]
         })
+        if (!result.rows[0]) {
+            return null
+        }
         return rowToModel(result.rows[0])
     },
 

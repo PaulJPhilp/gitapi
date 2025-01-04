@@ -24,7 +24,6 @@ export async function completeWithOpenAI(
 ): Promise<CompletionsResponse> {
     try {
         console.log("[OpenAI Provider] Making request with model:", model.id)
-        console.log("[OpenAI Provider] API Key length:", apiKey?.length ?? 0)
 
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",

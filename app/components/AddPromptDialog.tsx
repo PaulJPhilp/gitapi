@@ -32,9 +32,17 @@ import { API_BASE_URL } from "@/src/config/api"
 import type { Model } from "@/src/schemas/models"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { $getRoot } from "lexical"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
+import useSWR from "swr"
 import * as z from "zod"
+
+const fetcher = async (url: string) => {
+    const res = await fetch(`${API_BASE_URL}${url}`)
+    const data = await res.json()
+    console.log("[AddPromptDialog] Models response:", data)
+    return data.models || data // handle both {models: [...]} and direct array response
+}
 
 const formSchema = z.object({
     name: z.string().min(1, "Name is required"),
@@ -53,7 +61,10 @@ export function AddPromptDialog({ onPromptAdded }: AddPromptDialogProps) {
     const [open, setOpen] = useState(false)
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const [models, setModels] = useState<Model[]>([])
+    const { data: models, error: modelsError } = useSWR<Model[]>(
+        open ? '/api/models' : null,
+        fetcher
+    )
 
     const form = useForm<FormData>({
         resolver: zodResolver(formSchema),
@@ -64,38 +75,6 @@ export function AddPromptDialog({ onPromptAdded }: AddPromptDialogProps) {
             isActive: true,
         },
     })
-
-    useEffect(() => {
-        const fetchModels = async () => {
-            try {
-                console.log("[AddPromptDialog] Fetching models...")
-                const response = await fetch(`${API_BASE_URL}/models`)
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}))
-                    throw new Error(
-                        errorData.message ||
-                        `Failed to fetch models: ${response.status} ${response.statusText}`
-                    )
-                }
-
-                const data = await response.json()
-                console.log("[AddPromptDialog] Successfully fetched models:", data)
-                setModels(data.models)
-            } catch (err) {
-                console.error("[AddPromptDialog] Error fetching models:", {
-                    error: err,
-                    name: err instanceof Error ? err.name : "Unknown",
-                    message: err instanceof Error ? err.message : "Unknown error",
-                    stack: err instanceof Error ? err.stack : "No stack trace",
-                })
-                setError(err instanceof Error ? err.message : "Failed to fetch models")
-            }
-        }
-
-        if (open) {
-            fetchModels()
-        }
-    }, [open])
 
     const onSubmit = async (values: FormData) => {
         try {
@@ -184,7 +163,7 @@ export function AddPromptDialog({ onPromptAdded }: AddPromptDialogProps) {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            {models.map((model) => (
+                                            {(models ?? []).map((model) => (
                                                 <SelectItem key={model.id} value={model.id}>
                                                     {model.name}
                                                 </SelectItem>

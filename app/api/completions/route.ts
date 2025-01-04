@@ -16,18 +16,9 @@ const CompletionRequestSchema = z.object({
 
 export async function POST(request: NextRequest) {
     try {
-        console.log("[API] Environment variables:", {
-            hasOpenAIKey: !!process.env.OPENAI_API_KEY,
-            hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
-            nodeEnv: process.env.NODE_ENV,
-            envVars: Object.keys(process.env)
-        })
-
         const body = await request.json()
-        console.log("[API] Request body:", body)
 
         const result = CompletionRequestSchema.parse(body)
-        console.log("[API] Parsed request:", result)
 
         // Get the model to get its provider ID
         const model = await modelsService.getById(result.modelId)
@@ -38,7 +29,6 @@ export async function POST(request: NextRequest) {
         // Get completion from the model
         try {
             const completion = await completionsService.complete(result)
-            console.log("[API] Got completion:", completion)
 
             // Save the prompt run with the correct provider ID
             const promptRun = await promptRunsService.create({
@@ -53,12 +43,8 @@ export async function POST(request: NextRequest) {
                     totalTokens: completion.usage?.totalTokens ?? 0
                 }
             })
-            console.log("[API] Created prompt run:", promptRun)
 
-            return NextResponse.json({
-                ...completion,
-                promptRun
-            })
+            return NextResponse.json(promptRun)
         } catch (error) {
             console.error("[API] Service error:", {
                 name: error instanceof Error ? error.name : "Unknown",

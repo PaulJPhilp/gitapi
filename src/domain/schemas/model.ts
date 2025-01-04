@@ -12,6 +12,8 @@ export const modelSchema = baseSchema.extend({
     inputPricePerToken: z.string(),
     outputPricePerToken: z.string(),
     releaseDate: z.string().nullable(),
+    type: z.enum(['proprietary', 'open source']),
+    reasoning: z.boolean().default(false),
     supportedFeatures: supportedFeaturesSchema
 })
 
@@ -28,6 +30,8 @@ export const newModelSchema = baseNewSchema.extend({
     inputPricePerToken: z.string(),
     outputPricePerToken: z.string(),
     releaseDate: z.string().nullable(),
+    type: z.enum(['proprietary', 'open source']),
+    reasoning: z.boolean().default(false),
     supportedFeatures: supportedFeaturesSchema
 })
 

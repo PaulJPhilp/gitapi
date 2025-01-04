@@ -45,6 +45,8 @@ const modelSchema = z.object({
     maxTokens: z.number().min(1, "Max tokens must be at least 1"),
     inputPricePerToken: z.string().min(1, "Input price is required"),
     outputPricePerToken: z.string().min(1, "Output price is required"),
+    type: z.enum(['proprietary', 'open source']).default('proprietary'),
+    reasoning: z.boolean().default(false),
     supportedFeatures: z.object({
         chat: z.boolean().default(false),
         completion: z.boolean().default(false),
@@ -91,10 +93,8 @@ export function AddModelDialog({ providers, onModelAdded }: AddModelDialogProps)
         resolver: zodResolver(modelSchema),
         defaultValues: {
             isEnabled: true,
-            contextWindow: 4096,
-            maxTokens: 4096,
-            inputPricePerToken: "0.000001",
-            outputPricePerToken: "0.000001",
+            type: 'proprietary',
+            reasoning: false,
             supportedFeatures: {
                 chat: false,
                 completion: false,
@@ -331,6 +331,54 @@ export function AddModelDialog({ providers, onModelAdded }: AddModelDialogProps)
                                         </FormControl>
                                         <FormDescription>Price per output token in USD</FormDescription>
                                         <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField
+                                control={form.control}
+                                name="type"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Type</FormLabel>
+                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                            <FormControl>
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select model type" />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="proprietary">Proprietary</SelectItem>
+                                                <SelectItem value="open source">Open Source</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormDescription>
+                                            Whether the model is proprietary or open source
+                                        </FormDescription>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="reasoning"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                        <div className="space-y-0.5">
+                                            <FormLabel>Reasoning Capability</FormLabel>
+                                            <FormDescription>
+                                                Whether the model has advanced reasoning capabilities
+                                            </FormDescription>
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
                                     </FormItem>
                                 )}
                             />

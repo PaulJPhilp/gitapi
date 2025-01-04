@@ -22,6 +22,7 @@ export interface Model {
     inputPricePerToken: string
     outputPricePerToken: string
     releaseDate: string | null
+    type: 'proprietary' | 'open source'
     supportedFeatures: SupportedFeatures
 }
 

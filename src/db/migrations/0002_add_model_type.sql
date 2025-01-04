@@ -1,0 +1,1 @@
+ALTER TABLE models ADD COLUMN type TEXT NOT NULL DEFAULT 'proprietary';

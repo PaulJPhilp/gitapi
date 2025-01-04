@@ -15,6 +15,10 @@ modelsRouter.get("/", async (req, res, next) => {
 modelsRouter.get("/:id", async (req, res, next) => {
     try {
         const model = await modelsService.getById(req.params.id)
+        if (!model) {
+            res.status(404).json({ error: `Model not found: ${req.params.id}` })
+            return
+        }
         res.json(model)
     } catch (error) {
         next(error)

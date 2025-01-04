@@ -4,8 +4,11 @@ import { LoadingSpinner } from "@/app/components/LoadingSpinner"
 import { API_BASE_URL } from "@/src/config/api"
 import type { Model } from "@/src/schemas/models"
 import { useEffect, useState } from "react"
+import useSWR from "swr"
 import { PromptRunner, type PromptRunnerFormData } from "./PromptRunner"
 import { ResultsView } from "./ResultsView"
+
+const fetcher = (url: string) => fetch(`${API_BASE_URL}${url}`).then(res => res.json())
 
 interface CompletionResponse {
     text: string
@@ -50,43 +53,11 @@ export function CompletionsForm({ promptId, content }: CompletionsFormProps) {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [response, setResponse] = useState<CompletionResponse | null>(null)
     const [error, setError] = useState<string | null>(null)
-    const [models, setModels] = useState<Model[]>([])
+    const { data: models, error: modelsError } = useSWR<Model[]>('/api/models', fetcher)
 
     useEffect(() => {
-        const fetchModels = async () => {
-            try {
-                setIsLoading(true)
-                setError(null)
-                console.log("[CompletionsForm] Fetching models...")
-
-                const response = await fetch(`${API_BASE_URL}/models`)
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}))
-                    throw new Error(
-                        errorData.message ||
-                        `Failed to fetch models: ${response.status} ${response.statusText}`
-                    )
-                }
-
-                const data = await response.json()
-                console.log("[CompletionsForm] Successfully fetched models:", data)
-                setModels(data.models.filter((model: Model) => model.supportedFeatures.completion))
-            } catch (err) {
-                console.error("[CompletionsForm] Error fetching models:", {
-                    error: err,
-                    name: err instanceof Error ? err.name : "Unknown",
-                    message: err instanceof Error ? err.message : "Unknown error",
-                    stack: err instanceof Error ? err.stack : "No stack trace",
-                })
-                setError(err instanceof Error ? err.message : "Failed to fetch models")
-                throw err // Let error boundary handle it
-            } finally {
-                setIsLoading(false)
-            }
-        }
-
-        fetchModels()
-    }, [])
+        setIsLoading(!models && !modelsError)
+    }, [models, modelsError])
 
     const onSubmit = async (values: PromptRunnerFormData) => {
         try {
@@ -145,7 +116,7 @@ export function CompletionsForm({ promptId, content }: CompletionsFormProps) {
     return (
         <div className="space-y-8">
             <PromptRunner
-                models={models}
+                models={models ?? []}
                 content={content}
                 onSubmit={onSubmit}
                 loading={isSubmitting}

@@ -181,6 +181,8 @@ function ModelsList() {
                         <TableHead>Name</TableHead>
                         <TableHead>Provider</TableHead>
                         <TableHead>Model Family</TableHead>
+                        <TableHead>Type</TableHead>
+                        <TableHead>Reasoning</TableHead>
                         <TableHead>Context Window</TableHead>
                         <TableHead>Max Tokens</TableHead>
                         <TableHead>Input Price</TableHead>
@@ -202,6 +204,16 @@ function ModelsList() {
                                 {providers.find(p => p.id === model.providerId)?.name}
                             </TableCell>
                             <TableCell className="capitalize">{model.modelFamily}</TableCell>
+                            <TableCell>
+                                <Badge variant={model.type === 'open source' ? 'success' : 'default'}>
+                                    {model.type}
+                                </Badge>
+                            </TableCell>
+                            <TableCell>
+                                {model.reasoning && (
+                                    <Badge variant="secondary">Reasoning</Badge>
+                                )}
+                            </TableCell>
                             <TableCell>{model.contextWindow.toLocaleString()}</TableCell>
                             <TableCell>{model.maxTokens?.toLocaleString() ?? 'N/A'}</TableCell>
                             <TableCell>${Number(model.inputPricePerToken).toFixed(6)}</TableCell>

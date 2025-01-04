@@ -42,6 +42,8 @@ export function ModelFilters({ models, onFiltersChange, onProviderDeleted }: Mod
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedProvider, setSelectedProvider] = useState<string>("all")
     const [selectedFeatures, setSelectedFeatures] = useState<string[]>([])
+    const [selectedType, setSelectedType] = useState<string>("all")
+    const [showReasoning, setShowReasoning] = useState(false)
     const [showDisabled, setShowDisabled] = useState(false)
     const [providerToDelete, setProviderToDelete] = useState<{ id: string, name: string } | null>(null)
     const [error, setError] = useState<string | null>(null)
@@ -85,6 +87,18 @@ export function ModelFilters({ models, onFiltersChange, onProviderDeleted }: Mod
             )
         }
 
+        // Filter by type
+        if (selectedType !== "all") {
+            filteredModels = filteredModels.filter(model =>
+                model.type === selectedType
+            )
+        }
+
+        // Filter by reasoning capability
+        if (showReasoning) {
+            filteredModels = filteredModels.filter(model => model.reasoning)
+        }
+
         // Filter by features
         if (selectedFeatures.length > 0) {
             filteredModels = filteredModels.filter(model =>
@@ -100,7 +114,7 @@ export function ModelFilters({ models, onFiltersChange, onProviderDeleted }: Mod
         }
 
         onFiltersChange(filteredModels)
-    }, [models, searchQuery, selectedProvider, selectedFeatures, showDisabled, onFiltersChange])
+    }, [models, searchQuery, selectedProvider, selectedType, showReasoning, selectedFeatures, showDisabled, onFiltersChange])
 
     // Update filters when any filter changes
     const handleSearchChange = (value: string) => {
@@ -194,6 +208,25 @@ export function ModelFilters({ models, onFiltersChange, onProviderDeleted }: Mod
                         ))}
                     </SelectContent>
                 </Select>
+                <Select
+                    value={selectedType}
+                    onValueChange={setSelectedType}
+                >
+                    <SelectTrigger className="w-[180px]">
+                        <SelectValue placeholder="Select type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">All Types</SelectItem>
+                        <SelectItem value="proprietary">Proprietary</SelectItem>
+                        <SelectItem value="open source">Open Source</SelectItem>
+                    </SelectContent>
+                </Select>
+                <Button
+                    variant={showReasoning ? "default" : "outline"}
+                    onClick={() => setShowReasoning(!showReasoning)}
+                >
+                    {showReasoning ? "Hide Reasoning" : "Show Reasoning"}
+                </Button>
                 <Button
                     variant={showDisabled ? "default" : "outline"}
                     onClick={handleShowDisabledChange}

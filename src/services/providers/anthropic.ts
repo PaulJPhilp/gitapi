@@ -36,7 +36,6 @@ export async function completeWithAnthropic(
 
         const anthropicModelId = modelMap[model.id] ?? model.id
         console.log("[Anthropic Provider] Making request with model:", anthropicModelId)
-        console.log("[Anthropic Provider] API Key length:", apiKey?.length ?? 0)
 
         const response = await fetch("https://api.anthropic.com/v1/messages", {
             method: "POST",
@@ -76,7 +75,6 @@ export async function completeWithAnthropic(
         }
 
         const data = (await response.json()) as AnthropicCompletionResponse
-        console.log("[Anthropic Provider] Response:", data)
 
         return {
             text: data.content[0].text,

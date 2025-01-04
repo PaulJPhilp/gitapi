@@ -9,6 +9,8 @@ export interface Model {
     maxTokens?: number
     inputPricePerToken: number
     outputPricePerToken: number
+    type: 'proprietary' | 'open source'
+    reasoning: boolean
     supportedFeatures: {
         chat: boolean
         completion: boolean

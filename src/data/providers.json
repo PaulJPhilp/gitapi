@@ -3,7 +3,7 @@
 		{
 			"id": "openai",
 			"name": "OpenAI",
-			"description": "Leading AI research company providing state-of-the-art language models",
+			"description": "The industry leader with GPT-4o and GPT-4o mini, powering numerous enterprise applications and services through partnerships with companies like Microsoft, Duolingo, and Stripe",
 			"website": "https://openai.com",
 			"apiKeyRequired": true,
 			"baseUrl": "https://api.openai.com/v1",
@@ -22,7 +22,7 @@
 		{
 			"id": "anthropic",
 			"name": "Anthropic",
-			"description": "AI research company focused on developing safe and ethical AI systems",
+			"description": "Notable for its Claude 3 series (Haiku, Sonnet, and Opus), with Claude 3 Opus achieving an industry-leading performance of 84.83% in benchmarks",
 			"website": "https://anthropic.com",
 			"apiKeyRequired": true,
 			"baseUrl": "https://api.anthropic.com/v1",
@@ -40,8 +40,8 @@
 		},
 		{
 			"id": "google",
-			"name": "Google AI",
-			"description": "Google's advanced AI platform offering cutting-edge language and multimodal models",
+			"name": "Google",
+			"description": "Leading the market with advanced models like Gemini 1.5 and PaLM 2, featuring a 1-million token context window and exceptional multilingual capabilities",
 			"website": "https://ai.google.dev",
 			"apiKeyRequired": true,
 			"baseUrl": "https://generativelanguage.googleapis.com/v1",
@@ -60,7 +60,7 @@
 		{
 			"id": "meta",
 			"name": "Meta",
-			"description": "Meta's open-source AI models and research platform, including Llama series",
+			"description": "Creator of the LLaMA series, with LLaMA 3.1 featuring 405 billion parameters and a 128,000 token context window. Their commitment to open-source development has made significant industry impact",
 			"website": "https://ai.meta.com",
 			"apiKeyRequired": false,
 			"baseUrl": "https://api.meta.ai/v1",
@@ -77,28 +77,9 @@
 			}
 		},
 		{
-			"id": "ibm",
-			"name": "IBM Watson",
-			"description": "Enterprise-grade AI solutions with focus on business applications and natural language processing",
-			"website": "https://www.ibm.com/watson",
-			"apiKeyRequired": true,
-			"baseUrl": "https://api.us-south.watsonx.ai/v1",
-			"isEnabled": true,
-			"releaseDate": "2023-08-23",
-			"supportedFeatures": {
-				"chat": true,
-				"completion": true,
-				"embedding": true,
-				"imageGeneration": false,
-				"imageAnalysis": true,
-				"functionCalling": true,
-				"streaming": true
-			}
-		},
-		{
 			"id": "microsoft",
-			"name": "Microsoft Azure AI",
-			"description": "Enterprise AI platform with Azure OpenAI Service and custom model deployment capabilities",
+			"name": "Microsoft",
+			"description": "A major player through strategic partnerships and innovative projects, including the AutoGen framework for LLM workflow optimization",
 			"website": "https://azure.microsoft.com/products/ai-services",
 			"apiKeyRequired": true,
 			"baseUrl": "https://YOUR_RESOURCE_NAME.openai.azure.com",
@@ -110,6 +91,101 @@
 				"embedding": true,
 				"imageGeneration": true,
 				"imageAnalysis": true,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "xai",
+			"name": "xAI",
+			"description": "Developer of Grok-1 and Grok-2, with the latter surpassing GPT-4o in several performance metrics",
+			"website": "https://x.ai",
+			"apiKeyRequired": true,
+			"baseUrl": "https://api.x.ai/v1",
+			"isEnabled": true,
+			"releaseDate": "2023-12-08",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": false,
+				"imageAnalysis": false,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "cohere",
+			"name": "Cohere",
+			"description": "Specializes in enterprise-focused LLM solutions with their Command model, offering powerful text generation and instruction-following capabilities",
+			"website": "https://cohere.ai",
+			"apiKeyRequired": true,
+			"baseUrl": "https://api.cohere.ai/v1",
+			"isEnabled": true,
+			"releaseDate": "2021-05-01",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": false,
+				"imageAnalysis": false,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "mistral",
+			"name": "Mistral AI",
+			"description": "Creator of Mistral Large 2, featuring 123 billion parameters and a 128,000 token context window, known for computational efficiency and strong coding support",
+			"website": "https://mistral.ai",
+			"apiKeyRequired": true,
+			"baseUrl": "https://api.mistral.ai/v1",
+			"isEnabled": true,
+			"releaseDate": "2023-09-27",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": false,
+				"imageAnalysis": false,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "databricks",
+			"name": "Databricks",
+			"description": "Developer of DBRX, an open-source LLM with 132 billion parameters that matches or exceeds GPT-3.5's performance on most benchmarks",
+			"website": "https://databricks.com",
+			"apiKeyRequired": true,
+			"baseUrl": "https://api.databricks.com/v1",
+			"isEnabled": true,
+			"releaseDate": "2023-10-01",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": false,
+				"imageAnalysis": false,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "ai21",
+			"name": "AI21 Labs",
+			"description": "Creator of the Jurassic-1 Jumbo model with 178 billion parameters, offering advanced language processing capabilities and the innovative MRKL system",
+			"website": "https://www.ai21.com",
+			"apiKeyRequired": true,
+			"baseUrl": "https://api.ai21.com/v1",
+			"isEnabled": true,
+			"releaseDate": "2021-08-11",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": false,
+				"imageAnalysis": false,
 				"functionCalling": true,
 				"streaming": true
 			}
