@@ -1,7 +1,7 @@
 "use client";
 
+import { useDatabaseInit } from "@/app/hooks/use-database-init";
 import type { ReactNode } from "react";
-import { useDatabaseInit } from "../src/hooks/use-database-init";
 
 interface DatabaseInitializerProps {
     children: ReactNode;

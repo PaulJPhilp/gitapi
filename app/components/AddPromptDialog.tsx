@@ -49,6 +49,10 @@ const formSchema = z.object({
     modelId: z.string().min(1, "Model is required"),
     content: z.string().min(1, "Content is required"),
     isActive: z.boolean().default(true),
+    templateId: z.string().optional(),
+    templateVersion: z.string().optional(),
+    parameters: z.record(z.unknown()).optional(),
+    autoUpdate: z.boolean().default(false)
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -73,6 +77,7 @@ export function AddPromptDialog({ onPromptAdded }: AddPromptDialogProps) {
             modelId: "",
             content: "",
             isActive: true,
+            autoUpdate: false
         },
     })
 

@@ -1,6 +1,6 @@
 import { ErrorMessage } from "@/app/components/ui/error-message";
 import { Button } from "@/components/ui/button";
-import type { Prompt } from "@/schemas/prompt";
+import type { Prompt } from "@/domain";
 import type { PromptExecutionResult } from "@/schemas/prompt-execution";
 import { useState } from "react";
 

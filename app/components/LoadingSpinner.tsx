@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/components/ui/utils"
 import { ReloadIcon } from "@radix-ui/react-icons"
 
 interface LoadingSpinnerProps {

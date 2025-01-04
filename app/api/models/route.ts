@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { NotFoundError, ValidationError } from "../../../src/errors"
 import { modelsService } from "../../../src/services/models"
+import { NotFoundError, ValidationError } from "../../api/errors/execution"
 
 const CreateModelSchema = z.object({
     name: z.string(),
@@ -13,6 +13,8 @@ const CreateModelSchema = z.object({
     maxTokens: z.number().int().positive().nullable(),
     inputPricePerToken: z.string(),
     outputPricePerToken: z.string(),
+    type: z.enum(['proprietary', 'open source']),
+    reasoning: z.boolean().default(false),
     releaseDate: z.string().nullable(),
     updatedAt: z.string().default(() => new Date().toISOString()),
     supportedFeatures: z.object({

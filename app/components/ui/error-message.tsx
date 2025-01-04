@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/components/ui/utils";
 import type * as React from "react";
 
 interface ErrorMessageProps extends React.HTMLAttributes<HTMLDivElement> { }

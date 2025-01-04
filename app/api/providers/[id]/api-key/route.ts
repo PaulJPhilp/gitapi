@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { NotFoundError } from "../../../../../src/errors"
 import { providersService } from "../../../../../src/services/providers"
+import { NotFoundError } from "../../../../api/errors/execution"
 
 const ApiKeySchema = z.object({
     apiKey: z.string().min(1)

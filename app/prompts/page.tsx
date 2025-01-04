@@ -20,8 +20,8 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { useToast } from "@/components/ui/use-toast"
+import type { Prompt } from "@/domain"
 import { API_BASE_URL } from "@/src/config/api"
-import type { Prompt } from "@/src/schemas/prompts"
 import { Copy } from "lucide-react"
 import { Suspense, useCallback, useEffect, useState } from "react"
 

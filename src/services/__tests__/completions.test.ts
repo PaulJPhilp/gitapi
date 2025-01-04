@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { ProviderAuthError, ProviderNotFoundError } from "../../errors";
 import type { Model } from "../../schemas/models";
 import { DefaultCompletionsService } from "../completions";
 import type { ProviderService } from "../providers";
 import * as providers from "../providers";
+import { ProviderAuthError, ProviderNotFoundError } from "../providers/errors";
 
 // Mock the completeWithProvider function
 vi.spyOn(providers, "completeWithProvider").mockImplementation(async () => ({

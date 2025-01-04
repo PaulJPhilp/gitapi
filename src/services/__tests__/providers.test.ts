@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { ProviderAuthError, ProviderNotEnabledError, ProviderNotFoundError } from "../../errors";
 import { models } from "../../schemas/models";
 import { InMemoryProviderService } from "../providers";
+import { ProviderAuthError, ProviderNotEnabledError, ProviderNotFoundError } from "../providers/errors";
 
 describe("ProviderService", () => {
     describe("getAllProviders", () => {

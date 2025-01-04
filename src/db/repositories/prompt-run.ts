@@ -1,5 +1,5 @@
+import type { PromptRun } from "@/domain"
 import { client } from "@/src/db/db"
-import type { PromptRun } from "@/src/db/schema/types"
 import type { Row } from "@libsql/client"
 import { nanoid } from "nanoid/non-secure"
 import type { PromptRunRepository } from "./types"

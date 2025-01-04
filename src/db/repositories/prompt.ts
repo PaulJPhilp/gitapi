@@ -1,5 +1,5 @@
+import type { Prompt } from "@/domain"
 import { client } from "@/src/db/db"
-import type { Prompt } from "@/src/db/schema/types"
 import type { Row } from "@libsql/client"
 import { nanoid } from "nanoid/non-secure"
 import type { PromptRepository } from "./types"
@@ -13,6 +13,8 @@ function rowToPrompt(row: Row): Prompt {
         content: String(row.content),
         isActive: Boolean(row.is_active),
         modelId: String(row.model_id),
+        templateId: String(row.template_id),
+        lastMigrationCheck: new Date(String(row.last_migration_check)),
         createdAt: String(row.created_at),
         updatedAt: String(row.updated_at)
     }
@@ -49,8 +51,21 @@ export class DefaultPromptRepository implements PromptRepository {
             const now = new Date().toISOString()
 
             await client.execute({
-                sql: "INSERT INTO prompts (id, name, content, is_active, model_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                args: [id, prompt.name, prompt.content, prompt.isActive, prompt.modelId, now, now]
+                sql: `INSERT INTO prompts (
+                    id, name, content, is_active, model_id, template_id,
+                    last_migration_check, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                args: [
+                    id,
+                    prompt.name,
+                    prompt.content,
+                    prompt.isActive,
+                    prompt.modelId,
+                    prompt.templateId,
+                    prompt.lastMigrationCheck.toISOString(),
+                    now,
+                    now
+                ]
             })
 
             const result = await client.execute({
@@ -71,7 +86,7 @@ export class DefaultPromptRepository implements PromptRepository {
     async update(id: string, data: Partial<Prompt>): Promise<Prompt> {
         try {
             const sets: string[] = []
-            const values: (string | boolean | null)[] = []
+            const values: (string | boolean | null | Date)[] = []
             const now = new Date().toISOString()
 
             if (data.name !== undefined) {
@@ -92,6 +107,16 @@ export class DefaultPromptRepository implements PromptRepository {
             if (data.modelId !== undefined) {
                 sets.push("model_id = ?")
                 values.push(data.modelId)
+            }
+
+            if (data.templateId !== undefined) {
+                sets.push("template_id = ?")
+                values.push(data.templateId)
+            }
+
+            if (data.lastMigrationCheck !== undefined) {
+                sets.push("last_migration_check = ?")
+                values.push(data.lastMigrationCheck.toISOString())
             }
 
             if (sets.length > 0) {

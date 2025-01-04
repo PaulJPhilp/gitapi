@@ -27,6 +27,8 @@ interface CreatePromptOptions {
     content?: string
     modelId: string
     isActive?: boolean
+    templateId?: string
+    lastMigrationCheck?: Date
 }
 
 interface CreateCompletionOptions {
@@ -92,7 +94,9 @@ export async function createTestPrompt(options: CreatePromptOptions) {
         name = 'Test Prompt',
         content = 'This is a test prompt',
         modelId,
-        isActive = true
+        isActive = true,
+        templateId = crypto.randomUUID(),
+        lastMigrationCheck = new Date()
     } = options
 
     const response = await fetch(`${API_BASE_URL}/prompts`, {
@@ -104,7 +108,9 @@ export async function createTestPrompt(options: CreatePromptOptions) {
             name,
             content,
             modelId,
-            isActive
+            isActive,
+            templateId,
+            lastMigrationCheck
         })
     })
 

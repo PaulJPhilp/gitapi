@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/components/ui/utils"
 import { LexicalComposer } from "@lexical/react/LexicalComposer"
 import { ContentEditable } from "@lexical/react/LexicalContentEditable"
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary"

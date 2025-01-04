@@ -1,0 +1,265 @@
+---
+version: "1"
+title: "TypeScript Coding Guide"
+description: "TypeScript conventions and best practices"
+tags: ["typescript", "best-practices", "coding-standards"]
+---
+
+# TypeScript Best Practices
+
+## Type Definitions
+
+### Interfaces and Types
+
+```typescript
+interface Prompt {
+    name: string
+    content: string
+    isActive: boolean
+}
+```
+
+### Null Handling
+
+Use optional chaining and nullish coalescing:
+
+```typescript
+// Good - Optional chaining
+const userName = user?.profile?.name ?? 'Anonymous'
+
+// Good - Type guard
+function isUser(value: unknown): value is User {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'id' in value &&
+    'name' in value
+  )
+}
+```
+
+## Async/Await
+
+Always use async/await over raw promises:
+
+```typescript
+// Good - Async/await with proper error handling
+async function processUser(id: string): Promise<void> {
+  try {
+    const user = await fetchUser(id)
+    await updateUserProfile(user)
+  } catch (error) {
+    // Handle errors appropriately
+    logger.error('Failed to process user', { id, error })
+    throw error
+  }
+}
+```
+
+## Type Assertions
+
+Use type assertions sparingly and prefer type guards:
+
+```typescript
+// Avoid - Type assertion
+const user = data as User
+
+// Better - Type guard
+if (isUser(data)) {
+  // data is now typed as User
+  processUser(data)
+}
+```
+
+## Enums
+
+Prefer union types over enums for better type safety:
+
+```typescript
+// Avoid - Enum
+enum Status {
+  Active,
+  Inactive,
+  Pending
+}
+
+// Better - Union type
+type Status = 'active' | 'inactive' | 'pending'
+```
+
+## Imports/Exports
+
+Use named exports and imports for better tree-shaking:
+
+```typescript
+// Good - Named exports
+export interface User {
+  id: string
+  name: string
+}
+
+export function createUser(name: string): User {
+  return { id: generateId(), name }
+}
+
+// Good - Named imports
+import { User, createUser } from './user'
+```
+
+```typescript
+interface Prompt {
+    name: string
+    content: string
+    isActive: boolean
+}
+
+interface Template {
+  id: string
+  name: string
+  content: string
+  version: string        // Semantic versioning
+  createdAt: Date
+  updatedAt: Date
+  isDeprecated: boolean
+  deprecatedAt?: Date
+  replacedByTemplateId?: string
+}
+
+interface TemplateVersion {
+  id: string
+  templateId: string      // Reference to parent template
+  version: string         // e.g., "1.0.0"
+  content: string
+  createdAt: Date
+  changeDescription: string
+  author: string
+}
+
+interface TemplateUpdate {
+  previousVersion: string
+  newVersion: string
+  changes: TemplateChanges
+  migrationStrategy: 'deprecate' | 'migrate' | 'coexist'
+}
+
+interface TemplateChanges {
+  contentDiff: string
+  parameterChanges: {
+    added: string[]
+    removed: string[]
+    modified: string[]
+  }
+  breakingChanges: boolean
+}
+
+interface Prompt {
+  id: string
+  templateId: string
+  templateVersion: string  // Specific version being used
+  content: string
+  parameters: Record<string, unknown>
+  autoUpdate: boolean     // Whether to auto-update to new template versions
+  lastMigrationCheck: Date
+}
+
+interface VersionCompatibility {
+  fromVersion: string
+  toVersion: string
+  isCompatible: boolean
+  requiredChanges?: string[]
+  automaticMigrationPossible: boolean
+}
+
+interface TemplateUpdateNotification {
+  templateId: string
+  affectedPrompts: Array<{
+    promptId: string
+    compatibilityStatus: 'compatible' | 'requires-review' | 'breaking'
+    suggestedActions: Array<{
+      type: 'parameter-update' | 'content-update' | 'manual-review'
+      description: string
+    }>
+  }>
+}
+
+type UpdateWorkflowState = 
+  | 'pending-update'      // Update available but not started
+  | 'update-in-progress'  // Currently being updated
+  | 'review-required'     // Needs manual review
+  | 'update-failed'       // Update attempted but failed
+  | 'update-complete'     // Successfully updated
+
+interface PromptUpdateStatus {
+  promptId: string
+  currentVersion: string
+  targetVersion: string
+  workflowState: UpdateWorkflowState
+  lastUpdateAttempt?: Date
+  updateHistory: Array<{
+    timestamp: Date
+    fromVersion: string
+    toVersion: string
+    status: 'success' | 'failure'
+    reason?: string
+  }>
+}
+
+interface UpdateValidation {
+  promptId: string
+  proposedUpdate: {
+    fromVersion: string
+    toVersion: string
+    parameterChanges: Record<string, unknown>
+    contentChanges: string
+  }
+  validation: {
+    isValid: boolean
+    parameterValidation: Array<{
+      parameter: string
+      status: 'valid' | 'invalid' | 'missing'
+      suggestion?: string
+    }>
+    contentValidation: {
+      syntaxValid: boolean
+      semanticsValid: boolean
+      issues: string[]
+    }
+  }
+}
+
+interface UpdateRollback {
+  promptId: string
+  rollbackPoint: {
+    version: string
+    timestamp: Date
+    snapshot: {
+      content: string
+      parameters: Record<string, unknown>
+      metadata: Record<string, unknown>
+    }
+  }
+  rollbackReason: string
+  automaticRollbackTriggers: Array<{
+    condition: string
+    threshold: number
+  }>
+}
+
+interface TemplateRepository {
+  create(template: Template): Promise<string>
+  getById(id: string): Promise<Template | null>
+  getVersions(templateId: string): Promise<TemplateVersion[]>
+  createVersion(version: TemplateVersion): Promise<string>
+  update(template: Template): Promise<void>
+  deprecate(id: string, replacedById?: string): Promise<void>
+}
+
+interface PromptRepository {
+  create(prompt: Prompt): Promise<string>
+  getById(id: string): Promise<Prompt | null>
+  getByTemplateId(templateId: string): Promise<Prompt[]>
+  update(prompt: Prompt): Promise<void>
+  updateStatus(id: string, status: PromptUpdateStatus): Promise<void>
+}
+
+

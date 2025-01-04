@@ -11,16 +11,24 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { LexicalEditor } from "@/components/ui/lexical-editor"
-import type { Prompt } from "@/src/schemas/prompts"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import type { Model, Prompt } from "@/domain"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 const formSchema = z.object({
     name: z.string().min(1, "Name is required"),
     content: z.string().min(1, "Content is required"),
-    modelId: z.string().min(1, "Model is required")
+    modelId: z.string().min(1, "Model is required"),
+    templateId: z.string().optional()
 })
 
 interface PromptsFormProps {
@@ -41,12 +49,29 @@ const setStoredPrompts = (prompts: Prompt[]) => {
 
 export default function PromptsForm({ onSuccess }: PromptsFormProps) {
     const [error, setError] = useState<string>()
+    const [models, setModels] = useState<Model[]>([])
+
+    useEffect(() => {
+        const fetchModels = async () => {
+            try {
+                const response = await fetch('/api/models')
+                if (!response.ok) throw new Error('Failed to fetch models')
+                const data = await response.json()
+                setModels(data)
+            } catch (error) {
+                console.error('Error fetching models:', error)
+                setError('Failed to load models')
+            }
+        }
+        fetchModels()
+    }, [])
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             name: "",
             content: "",
+            modelId: "",
         },
     })
 
@@ -58,6 +83,8 @@ export default function PromptsForm({ onSuccess }: PromptsFormProps) {
                 content: values.content.trim(),
                 isActive: false,
                 modelId: values.modelId,
+                templateId: values.templateId || crypto.randomUUID(),
+                lastMigrationCheck: new Date(),
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             }
@@ -106,6 +133,30 @@ export default function PromptsForm({ onSuccess }: PromptsFormProps) {
                                         }}
                                     />
                                 </FormControl>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+                    <FormField
+                        control={form.control}
+                        name="modelId"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Model</FormLabel>
+                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                    <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select a model" />
+                                        </SelectTrigger>
+                                    </FormControl>
+                                    <SelectContent>
+                                        {models.map((model) => (
+                                            <SelectItem key={model.id} value={model.id}>
+                                                {model.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                                 <FormMessage />
                             </FormItem>
                         )}

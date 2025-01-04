@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
-import { NotFoundError, ValidationError } from "../../../../src/errors"
 import { modelsService } from "../../../../src/services/models"
+import { NotFoundError, ValidationError } from "../../../api/errors/execution"
 
 interface RouteParams {
     params: {

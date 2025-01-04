@@ -1,4 +1,4 @@
-import type { Model, Prompt, PromptRun, Provider } from "@/src/domain/models"
+import type { Model, Prompt, PromptRun, Provider } from "@/domain"
 
 export interface ModelRepository {
     findAll(): Promise<Model[]>

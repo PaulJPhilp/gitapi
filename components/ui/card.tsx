@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils"
+import { cn } from "@/components/ui/utils"
 import * as React from "react"
 
 const Card = React.forwardRef<

@@ -13,8 +13,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import type { Model, Provider, SupportedFeatures } from "@/domain"
 import { API_BASE_URL } from "@/src/config/api"
-import type { Model, Provider } from "@/src/domain/models"
 import { Suspense, useEffect, useState } from "react"
 
 function ModelsList() {
@@ -53,12 +53,13 @@ function ModelsList() {
                     inputPricePerToken: number
                     outputPricePerToken: number
                     isEnabled: boolean
-                    supported_features?: string
-                    supportedFeatures?: Record<string, boolean>
+                    supportedFeatures: SupportedFeatures
+                    createdAt: string
+                    updatedAt: string
                 }) => ({
                     ...model,
-                    supportedFeatures: typeof model.supported_features === 'string'
-                        ? JSON.parse(model.supported_features)
+                    supportedFeatures: typeof model.supportedFeatures === 'string'
+                        ? JSON.parse(model.supportedFeatures)
                         : model.supportedFeatures
                 })))
 
@@ -107,12 +108,13 @@ function ModelsList() {
                 inputPricePerToken: number
                 outputPricePerToken: number
                 isEnabled: boolean
-                supported_features?: string
-                supportedFeatures?: Record<string, boolean>
+                supportedFeatures: SupportedFeatures
+                createdAt: string
+                updatedAt: string
             }) => ({
                 ...model,
-                supportedFeatures: typeof model.supported_features === 'string'
-                    ? JSON.parse(model.supported_features)
+                supportedFeatures: typeof model.supportedFeatures === 'string'
+                    ? JSON.parse(model.supportedFeatures)
                     : model.supportedFeatures
             }))))
             .catch(error => setError(error instanceof Error ? error.message : "An error occurred"))
@@ -205,7 +207,7 @@ function ModelsList() {
                             </TableCell>
                             <TableCell className="capitalize">{model.modelFamily}</TableCell>
                             <TableCell>
-                                <Badge variant={model.type === 'open source' ? 'success' : 'default'}>
+                                <Badge variant={model.type === 'open source' ? 'secondary' : 'default'}>
                                     {model.type}
                                 </Badge>
                             </TableCell>

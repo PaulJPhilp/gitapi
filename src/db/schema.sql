@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS prompts (
     content TEXT NOT NULL,
     is_active INTEGER NOT NULL DEFAULT 1,
     model_id TEXT NOT NULL,
+    template_id TEXT,
+    last_migration_check TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
 );

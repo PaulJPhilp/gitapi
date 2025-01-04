@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
-import { NotFoundError, ValidationError } from "../../../../src/errors"
 import { promptsService } from "../../../../src/services/prompts"
+import { NotFoundError, ValidationError } from "../../../api/errors/execution"
 
 interface RouteParams {
     params: {

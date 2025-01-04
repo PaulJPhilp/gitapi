@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
-import { NotFoundError, ValidationError } from "../../../src/errors"
 import { providersService } from "../../../src/services/providers"
+import { NotFoundError, ValidationError } from "../../api/errors/execution"
 
 const CreateProviderSchema = z.object({
     name: z.string(),

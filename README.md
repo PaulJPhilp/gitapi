@@ -1,60 +1,93 @@
-# GitAPI
+# Git API Service
 
-A Next.js application for managing AI model providers and models, with a focus on Git-based workflows.
+A TypeScript-based service for managing AI model providers, prompts, and completions with support for multiple AI providers like OpenAI and Anthropic.
 
 ## Features
 
-- Provider management (OpenAI, Anthropic, etc.)
-- Model configuration and management
-- Support for various AI capabilities (chat, completion, embedding, etc.)
-- SQLite database for local development
-- Modern UI with Shadcn/UI components
+- 🤖 Multi-provider AI support (OpenAI, Anthropic)
+- 🔑 Secure API key management
+- 📝 Prompt management and versioning
+- 📊 Completion tracking and history
+- 🔍 Vector-based semantic search
+- 🔄 GitHub integration for releases
 
 ## Tech Stack
 
-- Next.js 14 with App Router
 - TypeScript
-- SQLite with Drizzle ORM
+- Next.js App Router
+- React
+- Shadcn UI
+- Radix UI
 - Tailwind CSS
-- Shadcn/UI components
-- Bun for package management and running scripts
+
+## Project Structure
+
+```
+├── app/                    # Next.js app router pages
+├── components/            # React components
+├── src/
+│   ├── dal/              # Data Access Layer
+│   ├── domain/           # Domain models and schemas
+│   ├── errors/           # Custom error types
+│   ├── infrastructure/   # Infrastructure code
+│   └── services/         # Core business logic
+│       ├── auth/         # Authentication services
+│       ├── providers/    # AI provider integrations
+│       └── completions/  # Completion handling
+```
 
 ## Getting Started
 
-1. Clone the repository:
-```bash
-git clone [repository-url]
-cd gitapi
-```
-
+1. Clone the repository
 2. Install dependencies:
 ```bash
-bun install
+npm install
 ```
 
-3. Create a `.env` file with required environment variables:
+3. Set up environment variables:
+```env
+OPENAI_API_KEY=your_openai_key
+ANTHROPIC_API_KEY=your_anthropic_key
+```
+
+4. Run the development server:
 ```bash
-cp .env.example .env
+npm run dev
 ```
 
-4. Initialize the database:
-```bash
-./scripts/magic-init.sh
-```
+## Core Services
 
-5. Start the development server:
-```bash
-bun run dev
-```
+- **Providers Service**: Manages AI providers and their API keys
+- **Models Service**: Handles model configurations and capabilities
+- **Prompts Service**: Manages prompt templates and versions
+- **Completions Service**: Processes completion requests across providers
+- **Vector Store**: Implements semantic search functionality
+- **GitHub Service**: Handles GitHub release management
 
-The application will be available at http://localhost:3000.
+## Development Guidelines
 
-## Development
+1. Use TypeScript for all new code
+2. Follow functional programming patterns
+3. Write descriptive variable names with auxiliary verbs
+4. Structure components with exports, subcomponents, helpers
+5. Use interfaces over types
+6. Implement proper error handling
+7. Write unit tests for new features
 
-- `bun run dev` - Start the development server
-- `bun run db:status` - Check database status
-- `bun run db:reset` - Reset and seed the database
-- `./scripts/magic-init.sh` - Initialize database with clean state
+## Error Handling
+
+The project uses custom error types for different scenarios:
+- `ValidationError`: Input validation failures
+- `ProviderAuthError`: API authentication issues
+- `NetworkError`: Communication failures
+- `EntityNotFoundError`: Resource not found
+
+## Contributing
+
+1. Create a feature branch
+2. Make your changes
+3. Write/update tests
+4. Submit a pull request
 
 ## License
 

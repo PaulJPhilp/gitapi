@@ -1,6 +1,17 @@
-import type { Provider } from "../domain/models"
-import { newProviderSchema } from "../domain/schemas/provider"
-import { providerRepository } from "../infrastructure/repositories"
+import { z } from "zod"
+import type { Provider } from "../../domain/provider"
+import { providerRepository } from "../dal/repositories/provider"
+
+const providerSchema = z.object({
+    name: z.string(),
+    description: z.string(),
+    website: z.string().url(),
+    apiKeyRequired: z.boolean(),
+    baseUrl: z.string().url().nullable(),
+    isEnabled: z.boolean(),
+    releaseDate: z.string().nullable(),
+    supportedFeatures: z.record(z.boolean())
+})
 
 export const providersService = {
     async list(): Promise<Provider[]> {
@@ -31,12 +42,12 @@ export const providersService = {
     },
 
     async create(data: Omit<Provider, "id" | "createdAt">): Promise<Provider> {
-        const validatedData = newProviderSchema.parse(data)
+        const validatedData = providerSchema.parse(data)
         return providerRepository.create(validatedData)
     },
 
     async update(id: string, data: Partial<Omit<Provider, "id" | "createdAt">>): Promise<Provider> {
-        const validatedData = newProviderSchema.partial().parse(data)
+        const validatedData = providerSchema.partial().parse(data)
         return providerRepository.update(id, validatedData)
     },
 

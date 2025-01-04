@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/components/ui/utils"
 
 interface ProviderIconProps {
     providerId: string

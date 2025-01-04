@@ -1,0 +1,61 @@
+{
+	"providers": [
+		{
+			"id": "openai",
+			"name": "OpenAI",
+			"description": "Leading AI research company",
+			"website": "https://openai.com",
+			"apiKeyRequired": true,
+			"baseUrl": "https://api.openai.com/v1",
+			"isEnabled": true,
+			"releaseDate": "2015-12-11",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": true,
+				"imageAnalysis": true,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "anthropic",
+			"name": "Anthropic",
+			"description": "AI research company focused on safe and ethical AI",
+			"website": "https://anthropic.com",
+			"apiKeyRequired": true,
+			"baseUrl": "https://api.anthropic.com",
+			"isEnabled": true,
+			"releaseDate": "2021-01-01",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": false,
+				"imageGeneration": false,
+				"imageAnalysis": true,
+				"functionCalling": true,
+				"streaming": true
+			}
+		},
+		{
+			"id": "google",
+			"name": "Google",
+			"description": "Google's AI and machine learning platform",
+			"website": "https://ai.google.dev",
+			"apiKeyRequired": true,
+			"baseUrl": "https://generativelanguage.googleapis.com",
+			"isEnabled": true,
+			"releaseDate": "2023-12-13",
+			"supportedFeatures": {
+				"chat": true,
+				"completion": true,
+				"embedding": true,
+				"imageGeneration": false,
+				"imageAnalysis": true,
+				"functionCalling": true,
+				"streaming": true
+			}
+		}
+	]
+}

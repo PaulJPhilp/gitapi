@@ -14,8 +14,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import type { Provider, SupportedFeatures } from "@/domain"
 import { API_BASE_URL } from "@/src/config/api"
-import type { Provider } from "@/src/domain/models"
 import { Suspense, useCallback, useEffect, useState } from "react"
 
 function ProvidersList() {
@@ -50,14 +50,15 @@ function ProvidersList() {
                 baseUrl: string | null
                 apiKeyRequired: boolean
                 isEnabled: boolean
-                supported_features?: string
-                supportedFeatures?: Record<string, boolean>
+                supportedFeatures: SupportedFeatures
+                createdAt: string
+                updatedAt: string
             }) => ({
                 ...provider,
-                supportedFeatures: typeof provider.supported_features === 'string'
-                    ? JSON.parse(provider.supported_features)
-                    : provider.supportedFeatures
-            })))
+                supportedFeatures: typeof provider.supportedFeatures === 'string'
+                    ? JSON.parse(provider.supportedFeatures)
+                    : provider.supportedFeatures,
+            }))
         } catch (err) {
             console.error("[Providers Page] Error fetching providers:", {
                 error: err,

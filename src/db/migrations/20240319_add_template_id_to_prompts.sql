@@ -1,0 +1,2 @@
+ALTER TABLE prompts ADD COLUMN template_id TEXT;
+ALTER TABLE prompts ADD COLUMN last_migration_check TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP; 

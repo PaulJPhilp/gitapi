@@ -1,7 +1,7 @@
 import { client } from "@/src/db/db"
 import type { Row } from "@libsql/client"
 import { nanoid } from "nanoid/non-secure"
-import type { Model } from "../schema/types"
+import type { Model } from "../../domain/models"
 import type { ModelRepository } from "./types"
 
 const generateId = () => nanoid(10)
@@ -10,26 +10,30 @@ function rowToModel(row: Row): Model {
     return {
         id: String(row.id),
         name: String(row.name),
-        description: row.description ? String(row.description) : "",
+        description: row.description ? String(row.description) : null,
         providerId: String(row.provider_id),
         isEnabled: Boolean(row.is_enabled),
         createdAt: String(row.created_at),
         updatedAt: String(row.updated_at),
-        modelFamily: null,
-        contextWindow: 0,
-        maxTokens: null,
-        inputPricePerToken: "0",
-        outputPricePerToken: "0",
-        releaseDate: null,
-        supportedFeatures: {
-            chat: false,
-            completion: false,
-            embedding: false,
-            imageGeneration: false,
-            imageAnalysis: false,
-            functionCalling: false,
-            streaming: false
-        }
+        modelFamily: row.model_family ? String(row.model_family) : null,
+        contextWindow: Number(row.context_window),
+        maxTokens: row.max_tokens ? Number(row.max_tokens) : null,
+        inputPricePerToken: String(row.input_price_per_token),
+        outputPricePerToken: String(row.output_price_per_token),
+        releaseDate: row.release_date ? String(row.release_date) : null,
+        type: row.type as 'proprietary' | 'open source',
+        reasoning: Boolean(row.reasoning),
+        supportedFeatures: typeof row.supported_features === 'string'
+            ? JSON.parse(String(row.supported_features))
+            : {
+                chat: false,
+                completion: false,
+                embedding: false,
+                imageGeneration: false,
+                imageAnalysis: false,
+                functionCalling: false,
+                streaming: false
+            }
     }
 }
 

@@ -1,5 +1,33 @@
-import { models, providers } from "../src/data/models.json"
+import type { SupportedFeatures } from "@/domain"
+import { models, providers } from "../data/seeds"
 import { client } from "../src/db/client"
+
+interface SeedModel {
+    id: string
+    name: string
+    modelFamily: string
+    providerId: string
+    releaseDate: string
+    isEnabled: boolean
+    contextWindow: number
+    maxTokens: number
+    inputPricePerToken: number
+    outputPricePerToken: number
+    type: 'proprietary' | 'open source'
+    reasoning: boolean
+    supportedFeatures: SupportedFeatures
+}
+
+interface SeedProvider {
+    id: string
+    name: string
+    description: string
+    website: string
+    apiKeyRequired: boolean
+    baseUrl: string | null
+    isEnabled: boolean
+    supportedFeatures: SupportedFeatures
+}
 
 async function rebuildDatabase() {
     console.log("🔄 Starting database rebuild...")
@@ -11,7 +39,7 @@ async function rebuildDatabase() {
 
     // Insert providers
     console.log("Seeding providers...")
-    for (const provider of providers) {
+    for (const provider of providers as SeedProvider[]) {
         await client.execute({
             sql: `INSERT INTO providers (
                 id, name, description, website, api_key_required, base_url,
@@ -25,7 +53,7 @@ async function rebuildDatabase() {
                 provider.apiKeyRequired ? 1 : 0,
                 provider.baseUrl,
                 provider.isEnabled ? 1 : 0,
-                provider.releaseDate,
+                null, // releaseDate not in seed data
                 JSON.stringify(provider.supportedFeatures)
             ]
         })
@@ -33,7 +61,7 @@ async function rebuildDatabase() {
 
     // Insert models
     console.log("Seeding models...")
-    for (const model of models) {
+    for (const model of models as SeedModel[]) {
         await client.execute({
             sql: `INSERT INTO models (
                 id, name, description, provider_id, model_family,

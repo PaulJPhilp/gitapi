@@ -1,4 +1,3 @@
-import type { Model } from "@/app/services/providers"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -25,15 +24,17 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import type { Model, PromptRun } from "@/domain"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import * as z from "zod"
 
 const formSchema = z.object({
     modelId: z.string().min(1, "Model ID is required"),
-    prompt: z.string().min(1, "Prompt is required"),
+    content: z.string().min(1, "Prompt is required"),
     temperature: z.number().min(0).max(1).optional(),
     maxTokens: z.number().min(1).optional(),
+    providerId: z.string().min(1, "Provider ID is required")
 })
 
 export interface PromptRunnerProps {
@@ -44,9 +45,7 @@ export interface PromptRunnerProps {
     error: string | null
 }
 
-export interface PromptRunnerFormData {
-    modelId: string
-    prompt: string
+export interface PromptRunnerFormData extends Omit<PromptRun, "id" | "createdAt" | "completion" | "usage"> {
     temperature?: number
     maxTokens?: number
 }

@@ -28,8 +28,8 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
+import type { Model, Provider } from "@/domain"
 import { API_BASE_URL } from "@/src/config/api"
-import type { Model, Provider } from "@/src/domain/models"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PlusIcon } from "@radix-ui/react-icons"
 import { useState } from "react"

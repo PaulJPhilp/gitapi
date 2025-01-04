@@ -53,6 +53,8 @@ describe("Prompts API", () => {
             content: "This is a test prompt",
             modelId: "", // Will be set in beforeAll
             isActive: true,
+            templateId: "test-template",
+            lastMigrationCheck: new Date()
         };
 
         beforeAll(() => {
@@ -64,13 +66,17 @@ describe("Prompts API", () => {
                 name: testPrompt.name,
                 content: testPrompt.content,
                 modelId: testPrompt.modelId,
-                isActive: testPrompt.isActive
+                isActive: testPrompt.isActive,
+                templateId: testPrompt.templateId,
+                lastMigrationCheck: testPrompt.lastMigrationCheck
             });
 
             expect(prompt).toHaveProperty('id')
             expect(prompt.name).toBe(testPrompt.name)
             expect(prompt.content).toBe(testPrompt.content)
             expect(prompt.modelId).toBe(testPrompt.modelId)
+            expect(prompt.templateId).toBe(testPrompt.templateId)
+            expect(prompt.lastMigrationCheck).toBeDefined()
             createdPromptIds.push(prompt.id)
         });
 
@@ -117,6 +123,8 @@ describe("Prompts API", () => {
                     content: "This is a test prompt for get",
                     modelId: testModelId,
                     isActive: true,
+                    templateId: "test-template-get",
+                    lastMigrationCheck: new Date()
                 }),
             });
             const prompt = await response.json();

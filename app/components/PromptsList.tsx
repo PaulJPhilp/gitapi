@@ -17,8 +17,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import type { Prompt } from "@/domain"
 import { useEffect, useState } from "react"
-import type { Prompt } from "../../src/schemas/prompts"
 import { CompletionsForm } from "./CompletionsForm"
 
 // Helper functions for localStorage
@@ -35,15 +35,34 @@ const setStoredPrompts = (prompts: Prompt[]) => {
 
 export default function PromptsList() {
     const [prompts, setPrompts] = useState<Prompt[]>([])
+    const [models, setModels] = useState<Record<string, string>>({})
     const [error, setError] = useState<string>()
     const [loading, setLoading] = useState(true)
     const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null)
     const [runDialogOpen, setRunDialogOpen] = useState(false)
 
     useEffect(() => {
-        // Load initial prompts from localStorage
-        setPrompts(getStoredPrompts())
-        setLoading(false)
+        const fetchData = async () => {
+            try {
+                // Load prompts from localStorage
+                setPrompts(getStoredPrompts())
+
+                // Fetch models
+                const response = await fetch('/api/models')
+                if (!response.ok) throw new Error('Failed to fetch models')
+                const modelData = await response.json()
+                const modelMap = modelData.reduce((acc: Record<string, string>, model: { id: string, name: string }) => {
+                    acc[model.id] = model.name
+                    return acc
+                }, {})
+                setModels(modelMap)
+            } catch (error) {
+                setError(error instanceof Error ? error.message : "An error occurred")
+            } finally {
+                setLoading(false)
+            }
+        }
+        fetchData()
     }, [])
 
     const fetchPrompts = async () => {
@@ -110,6 +129,8 @@ export default function PromptsList() {
                         <TableHead>Status</TableHead>
                         <TableHead>Name</TableHead>
                         <TableHead>Content</TableHead>
+                        <TableHead>Model</TableHead>
+                        <TableHead>Template ID</TableHead>
                         <TableHead>Last Updated</TableHead>
                         <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
@@ -126,6 +147,8 @@ export default function PromptsList() {
                             <TableCell className="max-w-md truncate">
                                 {prompt.content}
                             </TableCell>
+                            <TableCell>{models[prompt.modelId] || prompt.modelId}</TableCell>
+                            <TableCell className="font-mono text-xs">{prompt.templateId}</TableCell>
                             <TableCell>
                                 {new Date(prompt.updatedAt).toLocaleString()}
                             </TableCell>
